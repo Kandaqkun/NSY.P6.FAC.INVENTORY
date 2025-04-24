@@ -1,0 +1,40 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+h2 {
+    font-weight: 600;
+}
+
+table img {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    font-size: 15px;
+}
+
+.alert {
+    font-size: 14px;
+}
+
+#reader {
+    max-width: 320px;
+    margin-top: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+@media (max-width: 768px) {
+    h2 {
+        font-size: 22px;
+    }
+    .btn, .form-control {
+        font-size: 14px;
+    }
+}
