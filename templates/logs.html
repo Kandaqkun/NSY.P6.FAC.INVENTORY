@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Log Aktiviti</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Log Aktiviti Sistem</h2>
+        <div>
+            <a href="{{ url_for('generate_log_pdf') }}" class="btn btn-sm btn-success">Download PDF</a>
+            <a href="{{ url_for('index') }}" class="btn btn-sm btn-secondary">Kembali ke Dashboard</a>
+        </div>
+    </div>
+
+    <form method="GET" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <input type="date" name="start" class="form-control" placeholder="Dari Tarikh" value="{{ request.args.get('start', '') }}">
+        </div>
+        <div class="col-md-3">
+            <input type="date" name="end" class="form-control" placeholder="Hingga Tarikh" value="{{ request.args.get('end', '') }}">
+        </div>
+        <div class="col-md-2">
+            <input type="text" name="barcode" class="form-control" placeholder="Barcode" value="{{ request.args.get('barcode', '') }}">
+        </div>
+        <div class="col-md-2">
+            <select name="action" class="form-select">
+                <option value="">Semua</option>
+                <option value="IN" {% if request.args.get('action') == 'IN' %}selected{% endif %}>IN</option>
+                <option value="OUT" {% if request.args.get('action') == 'OUT' %}selected{% endif %}>OUT</option>
+                <option value="REQUEST" {% if request.args.get('action') == 'REQUEST' %}selected{% endif %}>REQUEST</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Tapis</button>
+        </div>
+    </form>
+
+    {% if logs|length == 0 %}
+        <div class="alert alert-info">Tiada aktiviti direkod mengikut kriteria carian.</div>
+    {% else %}
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Tarikh & Masa</th>
+                    <th>Barcode</th>
+                    <th>Nama Produk</th>
+                    <th>Tindakan</th>
+                    <th>Kuantiti</th>
+                    <th>Tujuan</th>
+                    <th>Lokasi / Tugas</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.timestamp }}</td>
+                    <td>{{ log.barcode }}</td>
+                    <td>{{ log.name }}</td>
+                    <td>
+                        {% if log.action == 'IN' %}
+                            <span class="badge bg-success">IN</span>
+                        {% elif log.action == 'OUT' %}
+                            <span class="badge bg-danger">OUT</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">{{ log.action }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ log.quantity }}</td>
+                    <td>{{ log.purpose or '-' }}</td>
+                    <td>{{ log.task or '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+</body>
+</html>
